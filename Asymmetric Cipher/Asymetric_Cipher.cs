@@ -5,26 +5,13 @@ using System.Text;
 
 namespace Asymmetric_Cipher
 {
-    class Program
+    class Asymetric_Cipher
     {
         static void Main(string[] args)
         {
-            var cmd = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "cmd.exe",
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                }
-            };
-            cmd.Start();
+          
 
-            cmd.StandardInput.WriteLine("chcp 1252");
-            cmd.StandardInput.Flush();
-            cmd.StandardInput.Close();
+            Console.InputEncoding = Encoding.Latin1;
 
             string control = "start";
 
@@ -36,13 +23,23 @@ namespace Asymmetric_Cipher
                 PrimeCalc RandomPrime = new PrimeCalc();
                 PrimeCalc Euclid = new PrimeCalc();
 
-                RSA asymEncript = new RSA();
+                EncryptDecrypt asymEncript = new EncryptDecrypt();
 
-                Console.WriteLine("Irão ser gerados dois números primos num intervalo (p e q), Insira o valor máximo do Intervalo.");
+                Console.WriteLine("Algoritmo de cifra assimétrico baseado no RSA." + 
+                    Environment.NewLine + "Irão ser gerados dois números primos (p e q), num intervalo entre 3 e um valor máximo." +
+                    Environment.NewLine + "Insira o valor máximo do Intervalo maior que 20 até 127.");
 
-                int max;
-                while (!Int32.TryParse(Console.ReadLine(),out max))
-                    Console.WriteLine("Insira um número inteiro");
+                int max=256;
+                while (max > 127 || max < 20)
+                {
+                    while (!Int32.TryParse(Console.ReadLine(), out max))
+                        Console.WriteLine("Insira um número inteiro entre 20 e 127");
+                    if (max > 127 || max < 20)
+                        Console.WriteLine("Insira um número inteiro entre 20 e 127");
+                }
+
+                
+
 
                 Console.Write("A gerar e testar números primos ...");
                 Console.WriteLine();
@@ -66,7 +63,7 @@ namespace Asymmetric_Cipher
                // BigInteger n = 17 * 11;
                while (n > 255)
                 {
-                    Console.Write(" !!!Recusados por n (p*q) ser Superior a 255 (8bits)!!!");
+                    Console.Write(" !!!Recusados por n (p*q) ser Superior a 255 (8bits) 1Byte!!!");
                     p = RandomPrime.GetRandomPrime(max);
                     q = RandomPrime.GetRandomPrime(max);
 
@@ -77,16 +74,12 @@ namespace Asymmetric_Cipher
 
                     Console.Write("p= " + p + " e q= " + q);
 
-                    //p = 17;
-                    // q = 11;
-
-
                     n = BigInteger.Multiply(p, q);
                 }
                 Console.WriteLine(" foram os números primos seleccionados.");
 
                 BigInteger e = Euler.Select_e(n);
-                //BigInteger e = 11;
+             
 
                 BigInteger d = Euclid.ModInverse(e, Euler.Phi(n));
 
@@ -102,11 +95,11 @@ namespace Asymmetric_Cipher
 
                 Console.WriteLine("A mensagem original é: " + message);
 
-                string encryptedMessage = RSA.encrypt(message, e, n);
+                string encryptedMessage = EncryptDecrypt.encrypt(message, e, n);
 
                 Console.WriteLine("A mensagem encriptada é: " + encryptedMessage);
 
-                string decryptedMessage = RSA.decrypt(encryptedMessage, d, n);
+                string decryptedMessage = EncryptDecrypt.decrypt(encryptedMessage, d, n);
 
                 Console.WriteLine("Pressione a tecla 'Enter' para ver a mensagem desencriptada");
 

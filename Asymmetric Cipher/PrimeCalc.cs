@@ -80,17 +80,12 @@ namespace Asymmetric_Cipher
         public List<int> GenPrimeArrayMaxN(int n)
         {
             List<int> primes = new();
-            for (int i = 9; i <= n; i+=2)
+            for (int i = 3; i <= n; i+=2)
             {
                 if (IsPrime(i))
                     primes.Add(i);
             }
-            /*
-            Console.WriteLine("A Lista de números primos gerados é:");
-            for (int j = 0; j < primes.Count; j++) {
-                Console.WriteLine(primes[j]);
-            }
-            */
+
             Console.WriteLine();
             return primes;
            

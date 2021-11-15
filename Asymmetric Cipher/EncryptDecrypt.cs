@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace Asymmetric_Cipher
 {
-    class RSA
+    class EncryptDecrypt
     {
     
         public static bool validation(BigInteger e, BigInteger d, BigInteger n)
@@ -20,7 +20,7 @@ namespace Asymmetric_Cipher
         public static string encrypt(string message, BigInteger e , BigInteger n)
         {
             string encrypted;
-            byte[] bytes = Encoding.Unicode.GetBytes(message);
+            byte[] bytes = Encoding.Latin1.GetBytes(message);
             byte[] encryptedBytes = new byte[bytes.Length];
 
             for (int i = 0; i < bytes.Length; i++)
@@ -28,7 +28,7 @@ namespace Asymmetric_Cipher
                 encryptedBytes[i] = (byte)(BigInteger.ModPow(bytes[i], e, n));
             }
 
-            encrypted = Encoding.Unicode.GetString(encryptedBytes);
+            encrypted = Encoding.Latin1.GetString(encryptedBytes);
 
             return encrypted;
         }
@@ -37,7 +37,7 @@ namespace Asymmetric_Cipher
         public static string decrypt(string message, BigInteger d, BigInteger n)
         {
             string decrypted;
-            byte[] bytes = Encoding.Unicode.GetBytes(message);
+            byte[] bytes = Encoding.Latin1.GetBytes(message);
             byte[] decryptedBytes = new byte[bytes.Length];
 
             for (int i = 0; i < bytes.Length; i++)
@@ -46,7 +46,7 @@ namespace Asymmetric_Cipher
                 decryptedBytes[i] = (byte)BigInteger.ModPow(bytes[i],d,n);
             }
 
-            decrypted = Encoding.Unicode.GetString(decryptedBytes);
+            decrypted = Encoding.Latin1.GetString(decryptedBytes);
 
             return decrypted;
 
