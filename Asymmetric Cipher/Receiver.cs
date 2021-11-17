@@ -14,10 +14,8 @@ namespace Asymmetric_Cipher
         static BigInteger recievedBigIntStream = 0;
         static AuxCalc calc = new();
         static Blocks blocks = new();
-
         static KeyPair PV = new();
         static KeyPair PU = new();
-
         static Sender sender = new();
 
 
@@ -46,6 +44,7 @@ namespace Asymmetric_Cipher
                 PU.setPair(e, n);
                 TransmitKeyPair(e, n);
                 Console.WriteLine(" Valores são válidos");
+                Console.WriteLine();
                 Console.WriteLine(" Chaves escolhidas:");
                 Console.Write(" PU = { " + e + ", " + n + " } e PR = { " + d + ", " + n + " } ");
                 Console.WriteLine();
@@ -55,31 +54,32 @@ namespace Asymmetric_Cipher
             
         }
 
-
+        //Função que transmite a chave publica ao sender
         public static void TransmitKeyPair(BigInteger e, BigInteger n)
         {
             sender.ReceiveKeyPair(e, n);
         }
 
-
-
+        // Função que vai decifrar os blocos
         public static void decrypt(byte[] CBlock)
         {
-            
-            int blockSize = (int)((Math.Log2((double)PU.getN()) + 1) / ((double)PU.getK()));
-            BigInteger block = new(CBlock);
-            var decryptedBigInt = BigInteger.ModPow(block, PV.getK(), PV.getN());
+            int blockSize = (int)((Math.Log2((double)PU.getN()) + 1) / ((double)PU.getK()));  // Calculo do tamanho dos blocos em função da chave publica para o Sender também o poder calcular
+            BigInteger block = new(CBlock);                                                   // Cria um BigInt a partir do bloco de Butes recebido
+            var decryptedBigInt = BigInteger.ModPow(block, PV.getK(), PV.getN());             // Calcula M = C^d mod n e coloca num BigInt
 
             Console.Write(" Decifrado -> | ");
-            blocks.PrintByteBlock(decryptedBigInt.ToByteArray());
+            blocks.PrintByteBlock(decryptedBigInt.ToByteArray());                             // imprime o bloco decifrado  
             Console.Write(" |");
-            recievedBigIntStream = BigInteger.Multiply(recievedBigIntStream, BigInteger.Pow(10, blockSize));
-            recievedBigIntStream = BigInteger.Add(recievedBigIntStream, decryptedBigInt);
+
+            // Este objeto recievedBigIntStream recebe a stream de BigInts decifrados
+            recievedBigIntStream = BigInteger.Multiply(recievedBigIntStream, BigInteger.Pow(10, blockSize)); // stream = stream*10^blockSize - Faz um "shift" á esquerda na stream do tamanho de um bloco para se poder inserir o novo bloco decifrado  
+            recievedBigIntStream = BigInteger.Add(recievedBigIntStream, decryptedBigInt);                    // Insere o bloco decifrado na stream
             //Console.WriteLine(recievedBigIntStream); // para DEBUG
             Console.WriteLine("");
 
         }
 
+        // Função que recebe um bloco de dados, imprime-o e chama a função decrypt que irá tratar o bloco
         public void RecieveBlock (byte[] block)
         {
             Console.Write(" Recebido -> | ");
@@ -88,27 +88,30 @@ namespace Asymmetric_Cipher
             decrypt(block);
         }
 
+        // Função que calcula os Pares de chaves e pede a sua validação
         public static bool CalculateKeys(BigInteger p,BigInteger q)
         {
             var fi = calc.Phi(p, q);
             var n = BigInteger.Multiply(p, q);
             var e = calc.Select_e(fi,n);
             var d = calc.ModInverse(e, calc.Phi(p,q));
-            Console.WriteLine("p= " + p + " e q= " + q + " n= " + p * q + " fi= " + fi);
             return Validation(e, d, n);
         }
 
+        // função que imprime o Strem de BigInts, serve apenas para debug.
         public static void PrintBigIntStream()
         {
             /*//Para DEBUG
             Console.WriteLine("BIGINTSTREAM CRIADA = " + blocks.getStreamer() + " <- Enviada ");
             Console.WriteLine("BIGINTSTREAM CRIADA = " + recievedBigIntStream + " <- Recebida ");
             */
-            blocks.clearStreamer();
+            //blocks.clearStreamer();
         }
+
+        // Função que imprime a mensagem decifrada a partir do stream de BigInts após serem tratados em ConvertBigIntStreamToString
         public static void PrintMessageReceived()
         {
-            receivedMessage = blocks.ConvertBigIntStreamToString(recievedBigIntStream);
+            receivedMessage = blocks.ConvertBigIntStreamToString(recievedBigIntStream); 
             Console.WriteLine("A Mensagem Recebida foi: "+receivedMessage );
             Console.WriteLine();
         }

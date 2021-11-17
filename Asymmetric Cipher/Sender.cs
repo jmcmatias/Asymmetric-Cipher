@@ -16,49 +16,37 @@ namespace Asymmetric_Cipher
         public static void encrypt(string message)
         {
             int blockSize = (int)((Math.Log2((double)PU.getN()) + 1) / ((double)PU.getK()));
-            //int blockSize = 3;
-            //var encryptedBigIntBlock = new List<decimal>();
+
             var MessageBlocks = blocks.MessageToByteBlock( message, blockSize); // transforma a mensagem em blocos tipo lista de strings para poderem ser cifrados
 
-            Console.WriteLine("Message Blocks Em Encrypt = ");
+            Console.WriteLine(" Message Blocks ");
 
             foreach (byte[] Mblock in MessageBlocks)                              // Ciclo que vai cifrar cada bloco e transmitir cada um para o destino
             {
                 Console.Write(" Block | ");
                 blocks.PrintByteBlock(Mblock);
                 Console.Write(" | -> ");
-                BigInteger block = new(Mblock);
-                byte[] encBlock = BigInteger.ModPow(block, PU.getK(), PU.getN()).ToByteArray();
+                BigInteger block = new(Mblock);                                   // Torna o bloco atual em BigInteger
+                byte[] encBlock = BigInteger.ModPow(block, PU.getK(), PU.getN()).ToByteArray(); // executa a cifra C = M^e mod n e converte-a num array de bytes
 
                 Console.Write(" Cifrado | ");
                 blocks.PrintByteBlock(encBlock);
                 Console.Write(" | -> ");
-                Receiver.RecieveBlock(encBlock);
+
+                TransmitBlock(encBlock);                                          // Envia o bloco cifrado para o receiver.
             }
         }
         
-        public void TransmitBlock(byte[] block) 
+        // Função para colocar o bloco cifrado no receiver
+        public static void TransmitBlock(byte[] block) 
         {
             Receiver.RecieveBlock(block);
         }
 
+        // Função que recebe a chave publica
         public void ReceiveKeyPair(BigInteger e, BigInteger n)
         {
             PU.setPair(e, n);
         }
-
-
-        // Para formatação de Output
-        static int CountDigits( BigInteger n)
-        {
-            int count = 0;
-            while (n > 0)
-            {
-                n /= 10;
-                count++;
-            }
-            return count;
-        }
-
     }
 }

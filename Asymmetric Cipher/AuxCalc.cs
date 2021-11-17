@@ -50,20 +50,18 @@ namespace Asymmetric_Cipher
             return x;
         }
 
-        //Função que escolhe o primeiro 'e' relativamente primo a  
+        //Função que escolhe o primeiro 'e' relativamente primo a fi(n) tal que gcd(fi(n),e)=1  e  1<e<fi(n)
         public int Select_e(BigInteger fi,BigInteger n)
-        {
-           
-            for (int e=4 ; e < n; e++)          // e=4 pois o RSA torna-se vulneravel a um simples ataque com e muito baixo.
+        {           
+            for (int e=4 ; e < fi; e++)          // e=4 pois o RSA torna-se vulneravel a um simples ataque com e muito baixo.
             {
-                if (gcd(fi, e) == 1 )       //
+                if (gcd(fi, e) == 1 )       
                 {
                     return e;
                 }
             }
             return -1;
         }
-
 
         //Função que devolve um número primo aleatório até max
         public int GetRandomPrime(int max)

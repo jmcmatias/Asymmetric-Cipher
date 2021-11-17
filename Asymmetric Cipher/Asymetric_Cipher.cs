@@ -33,8 +33,7 @@ namespace Asymmetric_Cipher
                         Console.WriteLine(" Insira um número inteiro entre 20 e 1024");
                 }
                 
-                Console.Write(" A gerar e testar números primos ...");
-                Console.WriteLine();
+                Console.WriteLine(" A gerar e testar números primos ...");
                 var valid = false;
                 // Gera dois números primos aleatórios e diferentes entre si
                 do
@@ -46,23 +45,24 @@ namespace Asymmetric_Cipher
                         q = RandomPrime.GetRandomPrime(max);
                     }
 
-                    Console.Write(" Seleção automática de p = " + p + " e q = " + q + " com  n = " + p * q + " fi =" + (p - 1) * (q - 1));
+                    Console.WriteLine(" Seleção automática de p = " + p + " e q = " + q + " com  n = " + p * q + " fi = " + (p - 1) * (q - 1));
 
-                    valid=Receiver.CalculateKeys(p, q);
+                    valid=Receiver.CalculateKeys(p, q);     // Chama a função que calcula as chaves e as valida
                     if (!valid)
                     {
-                        Console.WriteLine(" Os números primos seleccionados não são válidos a gerar outros");
+                        Console.WriteLine(" Os números primos seleccionados não são válidos..." + 
+                            Environment.NewLine + " A gerar novos primos...");
                     }
-                } while (!valid);
+                } while (!valid);                           // Assim que se calcular chaves válidas prossegue
 
-                Console.Write(" Inserir a mensagem a encriptar: ");
+                Console.Write(" Inserir a mensagem a enviar: ");
                 string message = Console.ReadLine();
                 Sender.encrypt(message);
-                Receiver.PrintBigIntStream();
-                Console.WriteLine("Pressione a tecla 'Enter' para ver a mensagem desencriptada");
+                //Receiver.PrintBigIntStream();  // para DEBUG
+                Console.WriteLine("Pressione a tecla 'Enter' para ver a mensagem recebida");
                 Console.ReadLine();
                 Receiver.PrintMessageReceived();
-                Console.WriteLine("Press x to exit, Press ENTER to try again");
+                Console.WriteLine("Insira x para sair, ou apenas ENTER para testar novos valores");
                 control = Console.ReadLine();
             }
         }
