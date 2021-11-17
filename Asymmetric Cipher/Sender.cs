@@ -24,7 +24,7 @@ namespace Asymmetric_Cipher
 
             foreach (byte[] Mblock in MessageBlocks)                              // Ciclo que vai cifrar cada bloco e transmitir cada um para o destino
             {
-                Console.Write(" PlainText | ");
+                Console.Write(" Block | ");
                 blocks.PrintByteBlock(Mblock);
                 Console.Write(" | -> ");
                 BigInteger block = new(Mblock);
@@ -34,15 +34,7 @@ namespace Asymmetric_Cipher
                 blocks.PrintByteBlock(encBlock);
                 Console.Write(" | -> ");
                 Receiver.RecieveBlock(encBlock);
-
             }
-                        
-
-            //var test = BigIntBlockToMessage(MessageBlocks,n);
-
-
-            //Console.WriteLine(" TESTE ENCRYPTED " + encrypted);
-
         }
         
         public void TransmitBlock(byte[] block) 

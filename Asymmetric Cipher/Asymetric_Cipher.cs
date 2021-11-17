@@ -46,9 +46,7 @@ namespace Asymmetric_Cipher
                         q = RandomPrime.GetRandomPrime(max);
                     }
 
-                    Console.Write(" p= " + p + " e q= " + q + " foram os números primos seleccionados com  n = " + p * q + " fi =" + (p - 1) * (q - 1));
-
-                    Console.WriteLine(" foram os números primos seleccionados.");
+                    Console.Write(" Seleção automática de p = " + p + " e q = " + q + " com  n = " + p * q + " fi =" + (p - 1) * (q - 1));
 
                     valid=Receiver.CalculateKeys(p, q);
                     if (!valid)
@@ -59,22 +57,11 @@ namespace Asymmetric_Cipher
 
                 Console.Write(" Inserir a mensagem a encriptar: ");
                 string message = Console.ReadLine();
-
-                Console.WriteLine(" A mensagem original é: " + message);
-
                 Sender.encrypt(message);
-
                 Receiver.PrintBigIntStream();
-
                 Console.WriteLine("Pressione a tecla 'Enter' para ver a mensagem desencriptada");
                 Console.ReadLine();
-
-                
-
                 Receiver.PrintMessageReceived();
-
-                
-
                 Console.WriteLine("Press x to exit, Press ENTER to try again");
                 control = Console.ReadLine();
             }

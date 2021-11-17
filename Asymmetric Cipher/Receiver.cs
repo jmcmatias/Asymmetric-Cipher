@@ -70,14 +70,9 @@ namespace Asymmetric_Cipher
             BigInteger block = new(CBlock);
             var decryptedBigInt = BigInteger.ModPow(block, PV.getK(), PV.getN());
 
-
-
             Console.Write(" Decifrado -> | ");
             blocks.PrintByteBlock(decryptedBigInt.ToByteArray());
-            Console.Write(" | -> ");
-
-
-
+            Console.Write(" |");
             recievedBigIntStream = BigInteger.Multiply(recievedBigIntStream, BigInteger.Pow(10, blockSize));
             recievedBigIntStream = BigInteger.Add(recievedBigIntStream, decryptedBigInt);
             //Console.WriteLine(recievedBigIntStream); // para DEBUG
@@ -91,7 +86,6 @@ namespace Asymmetric_Cipher
             blocks.PrintByteBlock(block);
             Console.Write(" | ");
             decrypt(block);
-            
         }
 
         public static bool CalculateKeys(BigInteger p,BigInteger q)
@@ -102,11 +96,6 @@ namespace Asymmetric_Cipher
             var d = calc.ModInverse(e, calc.Phi(p,q));
             Console.WriteLine("p= " + p + " e q= " + q + " n= " + p * q + " fi= " + fi);
             return Validation(e, d, n);
-        }
-
-        public static void DecodeReceivedMessage()
-        {
-           
         }
 
         public static void PrintBigIntStream()
